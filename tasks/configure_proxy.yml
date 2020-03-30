@@ -1,0 +1,23 @@
+---
+- name: Get the connection token from the controler
+  shell: traefikee tokens | grep 'TRAEFIKEE_PROXY_TOKEN' | cut -d '=' -f2
+  delegate_to: "{{ groups[traefikee_controller_group][0] }}"
+  register: get_token_shell
+
+- name: Save the token
+  set_fact:
+    traefikee_join_token: "{{ get_token_shell.stdout }}"
+
+- name: Deploy env file
+  template:
+    src: proxy.env.j2
+    dest: "{{ traefikee_config_dir }}/proxy.env"
+    mode: 0600
+  notify: Restart traefikee proxy
+
+- name: Create the systemd unit
+  template:
+    src: "{{ traefikee_proxy_systemd_unit_template }}"
+    dest: "{{ traefikee_proxy_systemd_unit_dest }}"
+    mode: 0600
+  notify: Restart traefikee proxy

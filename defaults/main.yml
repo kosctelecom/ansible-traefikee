@@ -1,0 +1,89 @@
+---
+# deployment control
+traefikee_install: false  # true to install traefikee binaries
+traefikee_configure: false  # true to configure and start the services
+
+# dynamic configuration
+# each entry is a configuration file. If the config evaluates to false
+# the config file is deleted
+#
+# example:
+
+# traefikee_cluster_dynamic_config:
+#   my_site:
+#     http:
+#       routers:
+#         my-site-router:
+#           rule: "Host('www.example.org')"
+#           entryPoints:
+#             - https
+#           service: site
+#       services:
+#         site:
+#           loadBalancer:
+#             servers:
+#               - url: "http://10.0.0.42:8000"
+
+traefikee_cluster_dynamic_config: {}
+
+# better vault this
+traefikee_license_key: ""
+
+# binaries download info
+traefikee_version: 2.0.2
+traefikee_arch: linux_amd64
+traefikee_archive_name: traefikee_v{{ traefikee_version }}_{{ traefikee_arch }}.tar.gz
+traefikee_archive_path: "{{ traefikee_role_cache_dir }}/{{ traefikee_archive_name }}"
+traefikee_download_url: https://s3.amazonaws.com/traefikee/binaries/v{{ traefikee_version }}/traefikee/{{ traefikee_archive_name }}
+traefikee_checksum_url: https://s3.amazonaws.com/traefikee/binaries/v{{ traefikee_version }}/traefikee/traefikee_checksums.txt
+traefikee_install_path: /usr/local/bin/traefikee
+teectl_version: "{{ traefikee_version }}"
+teectl_arch: "{{ traefikee_arch }}"
+teectl_archive_name: teectl_v{{ teectl_version }}_{{ teectl_arch }}.tar.gz
+teectl_archive_path: "{{ traefikee_role_cache_dir }}/{{ teectl_archive_name }}"
+teectl_download_url: https://s3.amazonaws.com/traefikee/binaries/v{{ teectl_version }}/teectl/{{ teectl_archive_name }}
+teectl_checksum_url: https://s3.amazonaws.com/traefikee/binaries/v{{ teectl_version }}/teectl/teectl_checksums.txt
+teectl_install_path: /usr/local/bin/teectl
+
+traefikee_controller_command_line: >
+  {{ traefikee_install_path }} controller
+  --advertise="{{ traefikee_controller_listen_address }}:{{ traefikee_controller_listen_port }}"
+  --api.socket={{ traefikee_controller_api_socket }}
+  --license=${TRAEFIKEE_LICENSE_KEY}
+traefikee_proxy_command_line: >
+  {{ traefikee_install_path }} proxy
+  --discovery.static.peers="{{ traefikee_controller_listen_address }}:{{ traefikee_controller_listen_port }}"
+  --jointoken.value=${TRAEFIKEE_JOIN_TOKEN}
+
+# deployment control
+traefikee_http_proxy: ""
+traefikee_https_proxy: "{{ traefikee_http_proxy }}"
+
+traefikee_config_dir: /etc/traefikee
+traefikee_controller_group: traefikee_controller
+traefikee_proxy_group: traefikee_proxy
+traefikee_role_cache_dir: /var/cache/ansible_traefikee
+
+traefikee_controller_systemd_unit_template: controller.service.j2
+traefikee_controller_systemd_unit_name: traefikee-ctl
+traefikee_controller_systemd_unit_dest: /etc/systemd/system/{{ traefikee_controller_systemd_unit_name }}.service
+traefikee_controller_api_socket: /var/run/traefikee/teectl.sock
+
+traefikee_proxy_systemd_unit_template: proxy.service.j2
+traefikee_proxy_systemd_unit_name: traefikee-proxy
+traefikee_proxy_systemd_unit_dest: /etc/systemd/system/{{ traefikee_proxy_systemd_unit_name }}.service
+
+traefikee_cluster_config_file: "{{ traefikee_config_dir }}/cluster.yml"
+traefikee_cluster_dynamic_config_dir: "{{ traefikee_config_dir }}/dynamic"
+
+traefikee_cluster_config:
+  entryPoints:
+    http:
+      address: ":80"
+    https:
+      address: ":443"
+  providers:
+    # this provider is required if one wants to use traefikee_cluster_dynamic_config
+    file:
+      directory: "{{ traefikee_cluster_dynamic_config_dir }}"
+      watch: true

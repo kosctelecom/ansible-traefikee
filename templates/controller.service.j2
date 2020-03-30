@@ -1,0 +1,11 @@
+[Unit]
+Description=Traefikee controller node
+
+[Service]
+EnvironmentFile={{ traefikee_config_dir }}/controller.env
+ExecStart={{ traefikee_controller_command_line }}
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+

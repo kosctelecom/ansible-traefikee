@@ -1,0 +1,39 @@
+---
+
+- name: Get sha256 of traefikee archive
+  shell: curl {{ traefikee_checksum_url }} | grep {{ traefikee_archive_name }} | cut -d' ' -f1
+  register: traefikee_checksum
+
+- name: Download traefikee archive
+  get_url:
+    url: "{{ traefikee_download_url }}"
+    dest: "{{ traefikee_archive_path }}"
+    checksum: "sha256:{{ traefikee_checksum.stdout }}"
+
+- name: Create workdir
+  tempfile:
+    state: directory
+  register: traefikee_unarchive
+
+- name: Untar traefikee archive
+  command: tar -xvzf {{ traefikee_archive_path }} --directory {{ traefikee_unarchive.path }}
+
+- name: Create the executable
+  shell: rm {{ traefikee_install_path }} && cp {{ traefikee_unarchive.path }}/traefikee {{ traefikee_install_path }}
+
+- name: Remove workdir
+  file:
+    state: absent
+    path: "{{ traefikee_unarchive.path }}"
+
+- name: Change permissions
+  file:
+    path: "{{ traefikee_install_path }}"
+    state: file
+    mode: 0755
+
+- name: Create the traefikee configuration dir
+  file:
+    path: "{{ traefikee_config_dir }}"
+    state: directory
+

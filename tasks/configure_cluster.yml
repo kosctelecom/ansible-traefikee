@@ -1,0 +1,15 @@
+- name: Remove unwanted configurations
+  file:
+    path: "{{ traefikee_cluster_dynamic_config_dir }}/{{ item.key }}.yml"
+    state: absent
+  when:
+    - not item.value
+  loop: '{{ traefikee_cluster_dynamic_config | dict2items }}'
+
+- name: Create or update configurations
+  copy:
+    dest: "{{ traefikee_cluster_dynamic_config_dir }}/{{ item.key }}.yml"
+    content: "{{ item.value | to_nice_yaml(indent=2) }}"
+  when:
+    - item.value
+  loop: '{{ traefikee_cluster_dynamic_config | dict2items }}'

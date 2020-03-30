@@ -1,0 +1,10 @@
+[Unit]
+Description=Traefikee proxy node
+
+[Service]
+EnvironmentFile={{ traefikee_config_dir }}/proxy.env
+ExecStart={{ traefikee_proxy_command_line }}
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

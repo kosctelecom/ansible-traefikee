@@ -1,0 +1,19 @@
+galaxy_info:
+  author: Bruno Dupuis
+  description: Install and configure a TraefikEE on-prem cluster
+  company: Kosc Telecom
+
+  license: GPL-3.0-only
+
+  min_ansible_version: 2.9
+
+  platforms:
+    - name: Debian
+      versions:
+      - all
+
+  galaxy_tags:
+    - traefik
+    - traefikee
+
+dependencies: []

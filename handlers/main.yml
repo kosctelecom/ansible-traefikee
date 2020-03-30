@@ -1,0 +1,20 @@
+---
+- name: Restart traefikee controller
+  systemd:
+    name: "{{ traefikee_controller_systemd_unit_name }}"
+    state: restarted
+    enabled: true
+    daemon_reload: true
+
+- name: Restart traefikee proxy
+  systemd:
+    name: "{{ traefikee_proxy_systemd_unit_name }}"
+    state: restarted
+    enabled: true
+    daemon_reload: true
+
+- name: Apply cluster configuration
+  command: teectl apply --file={{ traefikee_cluster_config_file }} --socket={{ traefikee_controller_api_socket }}
+  environment:
+    http_proxy: ""
+    https_proxy: ""

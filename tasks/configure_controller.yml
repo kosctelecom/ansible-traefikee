@@ -1,0 +1,28 @@
+---
+- name: Deploy env file
+  template:
+    src: controller.env.j2
+    dest: /etc/traefikee/controller.env
+    mode: 0600
+  notify: Restart traefikee controller
+
+- name: Create the dynamic config dir
+  file:
+    path: "{{ traefikee_cluster_dynamic_config_dir }}"
+    state: directory
+  notify: Restart traefikee controller
+
+- name: Create the systemd unit
+  template:
+    src: "{{ traefikee_controller_systemd_unit_template }}"
+    dest: "{{ traefikee_controller_systemd_unit_dest }}"
+    mode: 0600
+  notify: Restart traefikee controller
+
+- meta: flush_handlers
+
+- name: Configure the cluster
+  copy:
+    dest: "{{ traefikee_cluster_config_file }}"
+    content: "{{ traefikee_cluster_config | to_nice_yaml(indent=2) }}"
+  notify: Apply cluster configuration

@@ -1,0 +1,36 @@
+---
+- name: Create cache dir
+  file:
+    state: directory
+    path: "{{ traefikee_role_cache_dir }}"
+  when: traefikee_install | bool
+
+- name: Deploy teectl on the controlers
+  include_tasks: install_teectl.yml
+  when:
+    - traefikee_install | bool
+    - traefikee_controller_group in group_names
+
+- name: Deploy traefikee on all nodes
+  include_tasks: install_traefikee.yml
+  when:
+    - traefikee_install | bool
+    - traefikee_controller_group in group_names
+
+- name: Configure the controlers
+  include_tasks: configure_controller.yml
+  when:
+    - traefikee_configure | bool
+    - traefikee_controller_group in group_names
+
+- name: Configure the proxies
+  include_tasks: configure_proxy.yml
+  when:
+    - traefikee_configure | bool
+    - traefikee_proxy_group in group_names
+
+- name: Configure the cluster
+  include_tasks: configure_cluster.yml
+  when:
+    - traefikee_cluster_dynamic_config | length > 0
+    - traefikee_controller_group in group_names

@@ -1,0 +1,32 @@
+---
+- name: Get sha256 of teectl archive
+  shell: curl {{ teectl_checksum_url }} | grep {{ teectl_archive_name }} | cut -d' ' -f1
+  register: teectl_checksum
+
+- name: Download teectl archive
+  get_url:
+    url: "{{ teectl_download_url }}"
+    dest: "{{ teectl_archive_path }}"
+    checksum: "sha256:{{ teectl_checksum.stdout }}"
+
+- name: Create workdir
+  tempfile:
+    state: directory
+  register: teectl_unarchive
+
+- name: Untar teectl archive
+  command: tar -xvzf {{ teectl_archive_path }} --directory {{ teectl_unarchive.path }}
+
+- name: Create the executable
+  shell: cp {{ teectl_unarchive.path }}/teectl {{ teectl_install_path }}
+
+- name: Remove workdir
+  file:
+    state: absent
+    path: "{{ teectl_unarchive.path }}"
+
+- name: Change permissions
+  file:
+    path: "{{ teectl_install_path }}"
+    state: file
+    mode: 0755

@@ -82,8 +82,19 @@ traefikee_cluster_config:
       address: ":80"
     https:
       address: ":443"
+  api:
+    dashboard: true
   providers:
     # this provider is required if one wants to use traefikee_cluster_dynamic_config
     file:
       directory: "{{ traefikee_cluster_dynamic_config_dir }}"
       watch: true
+
+# Add additional env vars.
+# e.g. for Lego configuration (https://docs.traefik.io/https/acme/) :
+# traefikee_environment_extra: |
+#   OVH_ENDPOINT=ovh-eu
+#   OVH_APPLICATION_KEY=123456
+#   OVH_APPLICATION_SECRET=123456
+#   OVH_CONSUMER_KEY=abcdef1234
+traefikee_environment_extra: ""

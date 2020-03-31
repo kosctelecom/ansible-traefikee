@@ -13,6 +13,8 @@ galaxy_info:
       - all
 
   galaxy_tags:
+    - web
+    - networking
     - traefik
     - traefikee
 

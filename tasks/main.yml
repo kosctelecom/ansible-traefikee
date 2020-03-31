@@ -15,7 +15,6 @@
   include_tasks: install_traefikee.yml
   when:
     - traefikee_install | bool
-    - traefikee_controller_group in group_names
 
 - name: Configure the controlers
   include_tasks: configure_controller.yml

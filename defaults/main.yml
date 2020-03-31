@@ -30,7 +30,7 @@ traefikee_cluster_dynamic_config: {}
 traefikee_license_key: ""
 
 # binaries download info
-traefikee_version: 2.0.2
+traefikee_version: 2.0.3
 traefikee_arch: linux_amd64
 traefikee_archive_name: traefikee_v{{ traefikee_version }}_{{ traefikee_arch }}.tar.gz
 traefikee_archive_path: "{{ traefikee_role_cache_dir }}/{{ traefikee_archive_name }}"

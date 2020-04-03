@@ -53,6 +53,15 @@ traefikee_arch: linux_amd64
 traefikee_http_proxy: ""
 traefikee_https_proxy: "{{ traefikee_http_proxy }}"
 
+# Add additional env vars here.
+# e.g. for Lego configuration (https://docs.traefik.io/https/acme/) :
+# traefikee_environment_extra: |
+#   OVH_ENDPOINT=ovh-eu
+#   OVH_APPLICATION_KEY=123456
+#   OVH_APPLICATION_SECRET=123456
+#   OVH_CONSUMER_KEY=abcdef1234
+traefikee_environment_extra: ""
+
 # The static configuration is a verbatim copy of this mapping
 traefikee_cluster_config:
   entryPoints:

@@ -75,6 +75,10 @@ traefikee_proxy_systemd_unit_dest: /etc/systemd/system/{{ traefikee_proxy_system
 
 traefikee_cluster_config_file: "{{ traefikee_config_dir }}/cluster.yml"
 traefikee_cluster_dynamic_config_dir: "{{ traefikee_config_dir }}/dynamic"
+traefikee_runtime_dir: /var/lib/traefikee
+
+traefikee_proxy_system_group: "traefikee"
+traefikee_proxy_system_user: "traefikee"
 
 traefikee_cluster_config:
   entryPoints:

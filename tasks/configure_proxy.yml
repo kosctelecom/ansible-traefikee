@@ -1,4 +1,22 @@
 ---
+- name: Create the traefikee system group
+  group:
+    name: "{{ traefikee_proxy_system_group }}"
+    system: true
+
+- name: Create the runtime directory
+  file:
+    path: "{{ traefikee_runtime_dir }}"
+    owner: "{{ traefikee_proxy_system_user }}"
+    group: "{{ traefikee_proxy_system_group }}"
+    state: directory
+
+- name: Create the traefikee user
+  user:
+    name: "{{ traefikee_proxy_system_user }}"
+    system: true
+    group: "{{ traefikee_proxy_system_group }}"
+
 - name: Get the connection token from the controler
   shell: traefikee tokens | grep 'TRAEFIKEE_PROXY_TOKEN' | cut -d '=' -f2
   delegate_to: "{{ groups[traefikee_controller_group][0] }}"

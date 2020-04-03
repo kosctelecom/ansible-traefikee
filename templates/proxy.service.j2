@@ -2,9 +2,12 @@
 Description=Traefikee proxy node
 
 [Service]
+User={{ traefikee_proxy_system_user }}
+Group={{ traefikee_proxy_system_group }}
 EnvironmentFile={{ traefikee_config_dir }}/proxy.env
 ExecStart={{ traefikee_proxy_command_line }}
 Restart=on-failure
+AmbientCapabilities=CAP_NET_BIND_SERVICE
 
 [Install]
 WantedBy=multi-user.target

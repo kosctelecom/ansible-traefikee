@@ -107,6 +107,7 @@ all:
 - hosts: traefikee
   become: yes
   environment:
+    # those are required, as the installation process reaches the internet
     http_proxy: http://mysquid:3128
     https_proxy: http://mysquid:3128
   vars:
@@ -117,6 +118,9 @@ all:
 ```
 
 ### Update the dynamic configuration
+
+Note that the old `remove_me` configuration is deleted, while `my_site` is
+created or updated.
 
 ```yaml
 - hosts: traefikee
@@ -130,7 +134,7 @@ all:
             my-site-router:
               rule: "Host('www.example.org')"
               entryPoints:
-                - https
+                - http
               service: site
           services:
             site:

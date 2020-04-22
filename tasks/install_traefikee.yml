@@ -18,8 +18,13 @@
 - name: Untar traefikee archive
   command: tar -xvzf {{ traefikee_archive_path }} --directory {{ traefikee_unarchive.path }}
 
+- name: Delete the old binary
+  file:
+    path: "{{ traefikee_install_path }}"
+    state: absent
+
 - name: Create the executable
-  shell: rm {{ traefikee_install_path }} && cp {{ traefikee_unarchive.path }}/traefikee {{ traefikee_install_path }}
+  command: cp {{ traefikee_unarchive.path }}/traefikee {{ traefikee_install_path }}
 
 - name: Remove workdir
   file:

@@ -37,6 +37,7 @@ traefikee_archive_path: "{{ traefikee_role_cache_dir }}/{{ traefikee_archive_nam
 traefikee_download_url: https://s3.amazonaws.com/traefikee/binaries/v{{ traefikee_version }}/traefikee/{{ traefikee_archive_name }}
 traefikee_checksum_url: https://s3.amazonaws.com/traefikee/binaries/v{{ traefikee_version }}/traefikee/traefikee_checksums.txt
 traefikee_install_path: /usr/local/bin/traefikee
+traefikee_command: "{{ traefikee_install_path }}"
 teectl_version: "{{ traefikee_version }}"
 teectl_arch: "{{ traefikee_arch }}"
 teectl_archive_name: teectl_v{{ teectl_version }}_{{ teectl_arch }}.tar.gz
@@ -44,6 +45,7 @@ teectl_archive_path: "{{ traefikee_role_cache_dir }}/{{ teectl_archive_name }}"
 teectl_download_url: https://s3.amazonaws.com/traefikee/binaries/v{{ teectl_version }}/teectl/{{ teectl_archive_name }}
 teectl_checksum_url: https://s3.amazonaws.com/traefikee/binaries/v{{ teectl_version }}/teectl/teectl_checksums.txt
 teectl_install_path: /usr/local/bin/teectl
+teectl_command: "{{ teectl_install_path }}"
 
 traefikee_controller_command_line: >
   {{ traefikee_install_path }} controller

@@ -14,7 +14,7 @@
     daemon_reload: true
 
 - name: Apply cluster configuration
-  command: teectl apply --file={{ traefikee_cluster_config_file }} --socket={{ traefikee_controller_api_socket }}
+  command: "{{ teectl_command }} apply --file={{ traefikee_cluster_config_file }} --socket={{ traefikee_controller_api_socket }}"
   environment:
     http_proxy: ""
     https_proxy: ""

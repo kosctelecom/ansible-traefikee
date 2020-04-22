@@ -18,7 +18,7 @@
     state: directory
 
 - name: Get the connection token from the controler
-  shell: traefikee tokens | grep 'TRAEFIKEE_PROXY_TOKEN' | cut -d '=' -f2
+  shell: "{{ traefikee_command }} tokens | grep 'TRAEFIKEE_PROXY_TOKEN' | cut -d '=' -f2"
   delegate_to: "{{ groups[traefikee_controller_group][0] }}"
   register: get_token_shell
 
